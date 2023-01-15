@@ -55,3 +55,86 @@ mkdir -p $BAO_DEMOS_WRKDIR_IMGS
 
 ### 6a. Build di Freertos
 
+Setto una variaible di ambiente che mi servirà per freertos
+
+```
+export BAO_DEMOS_FREERTOS=$BAO_DEMOS_WRKDIR_SRC/freertos
+```
+
+Clono repository e buildo
+
+```
+git clone --recursive --shallow-submodules\
+    https://github.com/bao-project/freertos-over-bao.git\
+    $BAO_DEMOS_FREERTOS --branch demo
+make -C $BAO_DEMOS_FREERTOS PLATFORM=$PLATFORM
+```
+
+Copio immagine finale di FreeRTOS nella cartella finale delle immagini dei guest
+
+```
+cp $BAO_DEMOS_FREERTOS/build/$PLATFORM/freertos.bin $BAO_DEMOS_WRKDIR_IMGS
+```
+
+### 6b. Build di Linux
+
+#### Download source del kernel Linux
+
+Setto variabili di ambiente per Linux
+
+```
+export BAO_DEMOS_LINUX=$BAO_DEMOS/guests/linux
+export BAO_DEMOS_LINUX_REPO=https://source.codeaurora.org/external/imx/linux-imx
+export BAO_DEMOS_LINUX_VERSION=rel_imx_5.4.24_2.1.0
+export BAO_DEMOS_LINUX_REPO=https://github.com/torvalds/linux.git
+export BAO_DEMOS_LINUX_VERSION=v5.11
+export BAO_DEMOS_LINUX_SRC=$BAO_DEMOS_WRKDIR_SRC/linux-$BAO_DEMOS_LINUX_VERSION
+```
+
+Clono repository 
+
+```
+git clone $BAO_DEMOS_LINUX_REPO $BAO_DEMOS_LINUX_SRC\
+    --depth 1 --branch $BAO_DEMOS_LINUX_VERSION
+cd $BAO_DEMOS_LINUX_SRC
+git apply $BAO_DEMOS_LINUX/patches/$BAO_DEMOS_LINUX_VERSION/*.patch
+```
+
+Setto variabili di ambiente che puntano all'architettura target e alla specifica piattaforma scelte da noi
+
+```
+export BAO_DEMOS_LINUX_CFG_FRAG=$(ls $BAO_DEMOS_LINUX/configs/base.config\
+    $BAO_DEMOS_LINUX/configs/$ARCH.config\
+    $BAO_DEMOS_LINUX/configs/$PLATFORM.config 2> /dev/null)
+```
+
+#### Build di linux con initramfs incorporato con buildroot
+
+Setto variabili di ambiente:
+
+```
+export BAO_DEMOS_BUILDROOT=$BAO_DEMOS_WRKDIR_SRC/\
+buildroot-$ARCH-$BAO_DEMOS_LINUX_VERSION
+export BAO_DEMOS_BUILDROOT_DEFCFG=$BAO_DEMOS_LINUX/buildroot/$ARCH.config
+export LINUX_OVERRIDE_SRCDIR=$BAO_DEMOS_LINUX_SRC
+```
+
+Clono l'ultima versione stabile di buildroot
+
+
+```
+git clone https://github.com/buildroot/buildroot.git $BAO_DEMOS_BUILDROOT\
+    --depth 1 --branch 2020.11.3
+cd $BAO_DEMOS_BUILDROOT
+```
+
+Uso il file defconfig scaricato clonando le repository per patchare, buildo il tutto
+
+
+```
+make defconfig BR2_DEFCONFIG=$BAO_DEMOS_BUILDROOT_DEFCFG
+make linux-reconfigure all
+mv $BAO_DEMOS_BUILDROOT/output/images/Image\
+    $BAO_DEMOS_BUILDROOT/output/images/Image-$PLATFORM
+```
+
