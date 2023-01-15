@@ -30,7 +30,7 @@ Per la compilazione di bao ho necessità di andare a settare alcune variabili di
 - Le altre variabili vanno settate in base all'[appendice](https://github.com/bao-project/bao-demos#Appendix-I) della guida ufficiale di bao.
 
 ```
-export CROSS_COMPILE=/opt/arm-gnu-toolchain-12.2.rel1-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
+export CROSS_COMPILE=/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
 export DEMO=linux+freertos
 export PLATFORM=qemu-aarch64-virt
 export ARCH=aarch64
