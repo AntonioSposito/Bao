@@ -68,9 +68,18 @@ Clono repository e buildo
 git clone --recursive --shallow-submodules\
     https://github.com/bao-project/freertos-over-bao.git\
     $BAO_DEMOS_FREERTOS --branch demo
+
+```
+Prima di lanciare il make, bisogna modificare un file che contiene un nome di un registro errato. Il file da cambiare si trova in: bao-demos/wrkdir/srcs/freertos/src/baremetal-runtime/src/arch/armv8/aarch64/ e si chiama start.S, in particolare alla riga 57 va modificato in: 
+
+```
+msr ICC_SRE_EL2, x1
+```
+Una volta modificato il file start.S possiamo compilare freertos
+
+```
 make -C $BAO_DEMOS_FREERTOS PLATFORM=$PLATFORM
 ```
-
 Copio immagine finale di FreeRTOS nella cartella finale delle immagini dei guest
 
 ```
