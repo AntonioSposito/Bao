@@ -30,7 +30,7 @@ Per la compilazione di bao ho necessità di andare a settare alcune variabili di
 - Le altre variabili vanno settate in base all'[appendice](https://github.com/bao-project/bao-demos#Appendix-I) della guida ufficiale di bao.
 
 ```
-PATH=/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/bin/aarch64-none-elf-:$PATH
+PATH=/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/bin-:$PATH
 export CROSS_COMPILE=/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
 export DEMO=linux+freertos
 export PLATFORM=qemu-aarch64-virt
@@ -85,8 +85,6 @@ Setto variabili di ambiente per Linux
 
 ```
 export BAO_DEMOS_LINUX=$BAO_DEMOS/guests/linux
-export BAO_DEMOS_LINUX_REPO=https://source.codeaurora.org/external/imx/linux-imx
-export BAO_DEMOS_LINUX_VERSION=rel_imx_5.4.24_2.1.0
 export BAO_DEMOS_LINUX_REPO=https://github.com/torvalds/linux.git
 export BAO_DEMOS_LINUX_VERSION=v5.11
 export BAO_DEMOS_LINUX_SRC=$BAO_DEMOS_WRKDIR_SRC/linux-$BAO_DEMOS_LINUX_VERSION
