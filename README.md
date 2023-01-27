@@ -158,3 +158,53 @@ make -C $BAO_DEMOS_LINUX/lloader\
 ```
 
 A questo punto i file linux.bin, linux.elf e linux.dtb sarà posizionati nella cartella /bao-demos/wrkdir/imgs/qemu-aarch64-virt/linux+freertos
+
+## 7. Build di bao
+
+Clono repository di bao
+```
+export BAO_DEMOS_BAO=$BAO_DEMOS_WRKDIR_SRC/bao
+git clone https://github.com/bao-project/bao-hypervisor $BAO_DEMOS_BAO\
+    --branch v0.1.0
+```
+Copio configurazione di sistema nelle working directory
+
+```
+mkdir -p $BAO_DEMOS_WRKDIR_IMGS/config
+cp -L $BAO_DEMOS/demos/$DEMO/configs/$PLATFORM.c\
+    $BAO_DEMOS_WRKDIR_IMGS/config/$DEMO.c
+```
+Build di bao:
+```
+make -C $BAO_DEMOS_BAO\
+    PLATFORM=$PLATFORM\
+    CONFIG_REPO=$BAO_DEMOS_WRKDIR_IMGS/config\
+    CONFIG=$DEMO\
+    CONFIG_BUILTIN=y\
+    CPPFLAGS=-DBAO_DEMOS_WRKDIR_IMGS=$BAO_DEMOS_WRKDIR_IMGS
+```
+Sposto l'immagine bao.bin nella cartella /bao-demos/wrkdir/imgs/qemu-aarch64-virt/linux+freertos
+```
+cp $BAO_DEMOS_BAO/bin/$PLATFORM/builtin-configs/$DEMO/bao.bin\
+    $BAO_DEMOS_WRKDIR_IMGS
+```
+
+## 8. Build di qemu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
