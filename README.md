@@ -189,14 +189,82 @@ cp $BAO_DEMOS_BAO/bin/$PLATFORM/builtin-configs/$DEMO/bao.bin\
     $BAO_DEMOS_WRKDIR_IMGS
 ```
 
-## 8. Build di qemu
+## 8. Qemu
 
+### 8a. Build
 
+Download e installazione di qemu:
+```
+export BAO_DEMOS_QEMU=$BAO_DEMOS_WRKDIR_SRC/qemu-$ARCH
+git clone https://github.com/qemu/qemu.git $BAO_DEMOS_QEMU --depth 1\
+   --branch v6.1.0
+cd $BAO_DEMOS_QEMU
+./configure --target-list=aarch64-softmmu
+make -j$(nproc)
+sudo make install
+```
+Preparo il file .config
+```
+export BAO_DEMOS_UBOOT=$BAO_DEMOS_WRKDIR_SRC/u-boot
+git clone https://github.com/u-boot/u-boot.git $BAO_DEMOS_UBOOT --depth 1\
+   --branch v2021.01
+cd $BAO_DEMOS_UBOOT
+make qemu_arm64_defconfig
+```
+Modifico file file .config con queste due linee di codice:
+```
+echo "CONFIG_TFABOOT=y" >> .config
+echo "CONFIG_SYS_TEXT_BASE=0x60000000" >> .config
+```
+Build di uboot
+```
+make -j$(nproc)
+```
+Copia di u-boot.bin in /bao-demos/wrkdir/imgs/qemu-aarch64-virt/
+```
+cp $BAO_DEMOS_UBOOT/u-boot.bin $BAO_DEMOS_WRKDIR/imgs/$PLATFORM
+```
+Build TF-A
+```
+export BAO_DEMOS_ATF=$BAO_DEMOS_WRKDIR_SRC/arm-trusted-firmware
+git clone https://github.com/bao-project/arm-trusted-firmware.git\
+   $BAO_DEMOS_ATF --depth 1
+cd $BAO_DEMOS_ATF
+make PLAT=qemu bl1 fip BL33=$BAO_DEMOS_WRKDIR/imgs/$PLATFORM/u-boot.bin\
+   QEMU_USE_GIC_DRIVER=QEMU_GICV3
+dd if=$BAO_DEMOS_ATF/build/qemu/release/bl1.bin\
+   of=$BAO_DEMOS_WRKDIR/imgs/$PLATFORM/flash.bin
+dd if=$BAO_DEMOS_ATF/build/qemu/release/fip.bin\
+   of=$BAO_DEMOS_WRKDIR/imgs/$PLATFORM/flash.bin seek=64 bs=4096 conv=notrunc
+```
 
+### 8b. Avvio di qemu
 
+```
+qemu-system-aarch64 -nographic\
+   -M virt,secure=on,virtualization=on,gic-version=3 \
+   -cpu cortex-a53 -smp 4 -m 4G\
+   -bios $BAO_DEMOS_WRKDIR/imgs/$PLATFORM/flash.bin \
+   -device loader,file="$BAO_DEMOS_WRKDIR_IMGS/bao.bin",addr=0x50000000,force-raw=on\
+   -device virtio-net-device,netdev=net0 -netdev user,id=net0,hostfwd=tcp:127.0.0.1:5555-:22\
+   -device virtio-serial-device -chardev pty,id=serial3 -device virtconsole,chardev=serial3
+```
+Oppure posizionarsi in /bao-demos e lanciare:
+```
+make run
+```
 
+Una volta lanciata l'emulazione, viene visualizzato a schermo  il nome del pseudo-terminale in cui sarà piazzata la virtio seriale, con una riga del genere `char device redirected to /dev/pts/4 (label serial3)`. In una shell qualsiasi di linux, una volta avviato qemu si può lanciare il seguente comando per connettersi al pseudo-terminale:
 
+```
+screen /dev/pts/4
+```
 
+Oppure, ci si può collegare via ssh con il seguente comando:
+```
+ssh root@127.0.0.1 -p 5555
+```
+E usare username `root` e password `root` per accedere a linux.
 
 
 
