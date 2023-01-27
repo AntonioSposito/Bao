@@ -79,7 +79,7 @@ Una volta modificato il file start.S possiamo compilare freertos
 ```
 make -C $BAO_DEMOS_FREERTOS PLATFORM=$PLATFORM
 ```
-Copio immagine finale di FreeRTOS nella cartella finale delle immagini dei guest 
+Copio immagine finale di FreeRTOS (freertos.bin) nella cartella delle immagini dei guest (bao-demos/wrkdir/imgs/qemu-aarch64-virt/linux+freertos)
 
 ```
 cp $BAO_DEMOS_FREERTOS/build/$PLATFORM/freertos.bin $BAO_DEMOS_WRKDIR_IMGS
