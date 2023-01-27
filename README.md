@@ -5,7 +5,7 @@
 Scarico pacchetti necessari alla compilazione di bao, linux e freertos
 
 ```
-sudo apt install build-essential bison flex git libssl-dev ninja-build u-boot-tools pandoc libpixman-1-dev
+sudo apt install build-essential bison flex git libssl-dev ninja-build u-boot-tools pandoc libpixman-1-dev libglib2.0-dev
 ```
 
 ## 2. Download cross-compilatore
