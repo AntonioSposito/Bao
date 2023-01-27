@@ -155,3 +155,6 @@ make -C $BAO_DEMOS_LINUX/lloader\
     IMAGE=$BAO_DEMOS_BUILDROOT/output/images/Image-$PLATFORM\
     DTB=$BAO_DEMOS_WRKDIR_IMGS/$BAO_DEMO_LINUX_VM.dtb\
     TARGET=$BAO_DEMOS_WRKDIR_IMGS/$BAO_DEMO_LINUX_VM.bin
+```
+
+A questo punto i file linux.bin, linux.elf e linux.dtb sarà posizionati nella cartella /bao-demos/wrkdir/imgs/qemu-aarch64-virt/linux+freertos
