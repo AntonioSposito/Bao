@@ -266,7 +266,10 @@ ssh root@127.0.0.1 -p 5555
 ```
 E usare username `root` e password `root` per accedere a linux.
 
-
+Prima di vedere risultati a schermo, bisogna dire a u-boot di avviare bao, quindi nella shell dove è stato lanciato qemu bisogna mandare il comando:
+```
+go 0x50000000
+```
 
 
 
