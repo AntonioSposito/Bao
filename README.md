@@ -145,4 +145,14 @@ make linux-reconfigure all
 mv $BAO_DEMOS_BUILDROOT/output/images/Image\
     $BAO_DEMOS_BUILDROOT/output/images/Image-$PLATFORM
 ```
+#### Build del device tree
 
+```
+export BAO_DEMO_LINUX_VM=linux
+dtc $BAO_DEMOS/demos/$DEMO/devicetrees/$PLATFORM/$BAO_DEMO_LINUX_VM.dts >\
+    $BAO_DEMOS_WRKDIR_IMGS/$BAO_DEMO_LINUX_VM.dtb
+make -C $BAO_DEMOS_LINUX/lloader\
+    ARCH=$ARCH\
+    IMAGE=$BAO_DEMOS_BUILDROOT/output/images/Image-$PLATFORM\
+    DTB=$BAO_DEMOS_WRKDIR_IMGS/$BAO_DEMO_LINUX_VM.dtb\
+    TARGET=$BAO_DEMOS_WRKDIR_IMGS/$BAO_DEMO_LINUX_VM.bin
