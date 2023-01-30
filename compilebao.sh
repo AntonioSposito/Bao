@@ -1,0 +1,21 @@
+export CROSS_COMPILE=/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
+export DEMO=baremetal
+export PLATFORM=qemu-aarch64-virt
+export ARCH=aarch64
+export BAO_DEMOS=$(realpath .)
+export BAO_DEMOS_WRKDIR=$BAO_DEMOS/wrkdir
+export BAO_DEMOS_WRKDIR_SRC=$BAO_DEMOS_WRKDIR/srcs
+export BAO_DEMOS_WRKDIR_PLAT=$BAO_DEMOS_WRKDIR/imgs/$PLATFORM
+export BAO_DEMOS_WRKDIR_IMGS=$BAO_DEMOS_WRKDIR_PLAT/$DEMO
+export BAO_DEMOS_BAREMETAL=$BAO_DEMOS_WRKDIR_SRC/baremetal
+export BAO_DEMOS_BAO=$BAO_DEMOS_WRKDIR_SRC/bao
+
+make -C $BAO_DEMOS_BAO\
+    PLATFORM=$PLATFORM\
+    CONFIG_REPO=$BAO_DEMOS_WRKDIR_IMGS/config\
+    CONFIG=$DEMO\
+    CONFIG_BUILTIN=y\
+    CPPFLAGS=-DBAO_DEMOS_WRKDIR_IMGS=$BAO_DEMOS_WRKDIR_IMGS
+    
+cp $BAO_DEMOS_BAO/bin/$PLATFORM/builtin-configs/$DEMO/bao.bin\
+    $BAO_DEMOS_WRKDIR_IMGS
