@@ -31,7 +31,7 @@ Per la compilazione di bao ho necessità di andare a settare alcune variabili di
 ```
 PATH=/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/bin-:$PATH
 export CROSS_COMPILE=/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
-export DEMO=linux+freertos
+export DEMO=baremetal
 export PLATFORM=qemu-aarch64-virt
 export ARCH=aarch64
 ```
