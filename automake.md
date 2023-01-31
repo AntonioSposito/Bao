@@ -50,8 +50,34 @@ Per lanciare qemu basta eseguire:
 ```
 make run
 ```
+Oppure: (quest'ultima opzione abilita anche il debug via gdb)
+```
+qemu-system-aarch64 -nographic   -M virt,secure=on,virtualization=on,gic-version=3    -cpu cortex-a53 -smp 4 -m 4G   -bios ./wrkdir/imgs/qemu-aarch64-virt//flash.bin    -device loader,file="./wrkdir/imgs/qemu-aarch64-virt/baremetal/bao.bin",addr=0x50000000,force-raw=on   -device virtio-net-device,netdev=net0 -netdev user,id=net0,hostfwd=tcp:127.0.0.1:5555-:22   -device virtio-serial-device -chardev pty,id=serial3 -device virtconsole,chardev=serial3 -s
+```
 A schermo verranno stampato il log di u-boot, per far partire bao dobbiamo dire a u-boot di saltare alla locazione di memoria dove lo abbiamo salvato:
 
 ```
 go 0x50000000
+```
+## 7. Debug con gdb
+
+[Guida su xilinx wik](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/821624963/Debugging+Guest+Applications+with+QEMU+and+GDB)
+
+Scaricare gdb:
+```
+sudo apt-get install gdb-multiarch
+```
+
+Lanciare in un nuovo terminale:
+```
+gdb-multiarch
+```
+E collegarsi all'esecuzione di qemu con:
+
+```
+target remote:1234
+```
+Carico simboli di debug
+```
+add-symbol-file /home/antonio/bao-demos3/wrkdir/srcs/bao/bin/qemu-aarch64-virt/builtin-configs/baremetal/bao.elf
 ```
