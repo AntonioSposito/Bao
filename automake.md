@@ -79,5 +79,5 @@ target remote:1234
 ```
 Carico simboli di debug
 ```
-add-symbol-file /home/antonio/bao-demos3/wrkdir/srcs/bao/bin/qemu-aarch64-virt/builtin-configs/baremetal/bao.elf
+add-symbol-file /home/antonio/bao-progetto/wrkdir/srcs/bao/bin/qemu-aarch64-virt/builtin-configs/baremetal/bao.elf
 ```
