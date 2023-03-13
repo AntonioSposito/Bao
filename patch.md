@@ -1,4 +1,5 @@
 # Cache-based checkpointing mechanism for High-Availability in Safety Critical Systems
+Our paper regarding this topic is in this repo, you can find it [here](https://github.com/AntonioSposito/bao-progetto/blob/main/A2T%20paper.pdf).
 
 What if we wanted to introduce in these hypervisors a fast cache-based checkpointing mechanism with a low latency and overhead in order to reduce the downtime of the system? Our work focused on studying the feasibility of this mechanism exploiting the cache space efficiently
 
@@ -10,6 +11,9 @@ What we did:
 During the initialization phase, Bao assigns read and write permissions (and other flags) to each page, allowing VMs to access memory for any operation. We caused a data abort exception fault by setting the VM permissions for a page to write only, after the VM attempts a read operation the exception is raised and the hypervisor has to intervene. Since Bao does not support an handler for this fault, we patched the code by adding a simple handler that calculates the physical address of the page, finds the related page table entry, and restores normal read and write permissions.
 To determine the impact of such operation, we measured the time required to execute the VM exit, the time needed to execute the handler we implemented and, finally, the time needed to execute the VM entry; then we compared this data with the time required to do a memory read operation from both disk and cache. By comparing these times, we were able to quantify the impact such a mechanism would have if it was implemented in Bao.
 To optimize subsequent memory accesses to the page that caused the fault a pre-fetching of the page could be implemented within the handler itself; unfortunately, we have not been able to add this feature to our handler.
+
+## How to use
+You can simply follow the steps reported below and modify the code, or you can download it from [here](https://www.mediafire.com/file/ah7v943y2auico1/bao-demos3.zip/file). By downloading the zip file, after modifing some paths and user name in the .sh files, you can simply launch qemu as explained in the `automake.md` file.
 
 ## Our Patch
 In order to understand the code of our patch we will explain first how Bao assigns page permissions, second, we will illustrate the baremetal guest code executed the VM managed by the hypervisor and finally we will present the code of the handler that restore access permissions.
@@ -117,3 +121,6 @@ void aborts_sync_handler(){
     }
 }
 ```
+
+## Results and conclusions
+You can read our results and conclusions in [our paper](https://github.com/AntonioSposito/bao-progetto/blob/main/A2T%20paper.pdf)
