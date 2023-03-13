@@ -82,6 +82,7 @@ In the main file, we added the function `setup_PMU()` to set up the Performance 
 ## Permission handler
 The first time the LDR operation is performed, the hypervisor steps in to handle the exception. Since Bao does not foresee the possibility that a page can be mapped without read or write permissions, a handler is not implemented in the code to handle our case. We patched the code so that when the syndrome corresponding to the exception is encountered, a handler wrote by us is executed, instead of the error message saying that the hypervisor has no way to handle the exception.
 
+This handler is located in `srcs\bao\src\arch\armv8\aborts.c`
 ```c
 void permission_handler(uint32_t iss, uint64_t far, uint64_t il){
 
@@ -101,3 +102,18 @@ The handler is quite simple. In input it receives a 32-bit integer **ISS** (Inst
 
 After using the `pte_set` function, we could add an LDR operation to bring the page into the cache and speed up future memory reads. We want to do this because the page will have all the necessary permissions, which means it can be read directly from the cache instead of having to go to memory first. This will make the process faster and more efficient. However, when we tried to test this read operation, we were unsuccessful and didn't have enough time to investigate the problem. We think that caching the page in our handler managed by the hypervisor caused some memory misalignment, and during execution, the CPU encountered an error and stopped.
 
+In order to execute our handler, we need to modify the function `aborts_sync_handler` also located in `srcs\bao\src\arch\armv8\aborts.c`, when the ISS corresponding to our fault is encoutered, the permission handler we wrote is executed:
+
+```c
+void aborts_sync_handler(){
+[...]
+    if (iss == 0x1c1800f){
+	permission_handler(iss, ipa_fault_addr, il);
+    }else{
+	if (handler)
+        	handler(iss, ipa_fault_addr, il);
+    	else
+        	ERROR("no handler for abort ec = 0x%x", ec);  // unknown guest exception
+    }
+}
+```
