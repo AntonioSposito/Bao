@@ -25,15 +25,10 @@ We  modified the function: when the physical address (0x401a7000) of the page we
 int mem_map(...){
 [...]
 if (paddr == 0x401a7000){
-uint64_t wo_flags=PTE_VM_FLAGS_WO;
-
-pte_set(pte, paddr, 
-        pt_pte_type(&as->pt, lvl), 
-        wo_flags);
+	uint64_t wo_flags=PTE_VM_FLAGS_WO;
+	pte_set(pte, paddr, pt_pte_type(&as->pt, lvl), wo_flags);
 }else{
-pte_set(pte, paddr, 
-        pt_pte_type(&as->pt, lvl), 
-        flags);
+	pte_set(pte, paddr, pt_pte_type(&as->pt, lvl), flags);
 }
 [...]
 }
@@ -59,17 +54,14 @@ The code also stes up an UART interrupt, we can use the receiving handler `uart_
 ```c
 void uart_rx_handler(){
 static int counter = 0;
-printf("\n\ncpu%d: %s: %d\n",
-    get_cpuid(), 
-    __func__, counter++);
+printf("\n\ncpu%d: %s: %d\n", get_cpuid(), __func__, counter++);
 int a = 0;		
 int ptr = 0x1a2000;	
  
 MSR(PMCCNTR_EL0, 0);	
 
 uint64_t begin = MRS(PMCCNTR_EL0);
-asm volatile("ldr %0, [%1] ": "=r"(a)
-: "r" (ptr): "memory"); //read
+asm volatile("ldr %0, [%1] ": "=r"(a): "r" (ptr): "memory"); //read
 uint64_t bar_bef =  MRS(PMCCNTR_EL0);
 asm volatile("dsb sy" ::: "memory");		
 asm volatile("isb" ::: "memory");		
@@ -91,20 +83,15 @@ In the main file, we added the function `setup_PMU()` to set up the Performance 
 The first time the LDR operation is performed, the hypervisor steps in to handle the exception. Since Bao does not foresee the possibility that a page can be mapped without read or write permissions, a handler is not implemented in the code to handle our case. We patched the code so that when the syndrome corresponding to the exception is encountered, a handler wrote by us is executed, instead of the error message saying that the hypervisor has no way to handle the exception.
 
 ```c
-void permission_handler(uint32_t iss, 
-uint64_t far, uint64_t il){
+void permission_handler(uint32_t iss, uint64_t far, uint64_t il){
 
 uint64_t beg_handler=MRS(PMCCNTR_EL0);
 
-int paddr = (int)far - (int)0x14000 + 
- (int)0x40019000;
+int paddr = (int)far - (int)0x14000 + (int)0x40019000;
 pte_t* pte = NULL;
-pte=pt_get_pte(&cpu.vcpu->vm->as.pt, 
- 0x2, (void*)far);
+pte=pt_get_pte(&cpu.vcpu->vm->as.pt,  0x2, (void*)far);
 
-pte_set(pte, (uint64_t)paddr, 
- pt_pte_type(&cpu.vcpu->vm->as.pt,0x2), 
- PTE_VM_FLAGS);
+pte_set(pte, (uint64_t)paddr, pt_pte_type(&cpu.vcpu->vm->as.pt,0x2),  PTE_VM_FLAGS);
 	
 uint64_t end_handler=MRS(PMCCNTR_EL0);
 }
