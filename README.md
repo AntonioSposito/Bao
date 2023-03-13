@@ -16,3 +16,5 @@ Tutti i file vanno corretti con il nome utente/path della cartella giusta
 -`compilebao.sh` script per compilare bao da lanciare ogni volta che si vuole ricompilare bao oppure dopo aver ricompilato il guest
 
 -`launchqemu.sh` lancia bao tramite qemu, setta anche la connessione per il debug con gdb
+
+-`A2T paper.pdf` paper sulla nostra patch di Bao
