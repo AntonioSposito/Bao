@@ -7,6 +7,7 @@ Home del progetto, basato su [Bao-project](https://github.com/bao-project)
 [Vecchio readme](https://github.com/AntonioSposito/Bao/blob/main/README_old.md) con la guida su come buildare bao con freertos+linux
 
 ### File presenti nella repo:
+Tutti i file vanno corretti con il nome utente/path della cartella giusta
 
 -`compilebaremetal.sh` script per compilare solamente il guest baremetal
 
