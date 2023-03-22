@@ -1,7 +1,7 @@
 # Cache-based checkpointing mechanism for High-Availability in Safety Critical Systems
 <!--Our paper regarding this topic is in this repo, you can find it [here](https://github.com/AntonioSposito/bao-progetto/blob/main/A2T%20paper.pdf).-->
 
-What if we wanted to introduce in these hypervisors a fast cache-based checkpointing mechanism with a low latency and overhead in order to reduce the downtime of the system? Our work focused on studying the feasibility of this mechanism exploiting the cache space efficiently
+What if we wanted to introduce in modern hypervisors a fast cache-based checkpointing mechanism with a low latency and overhead in order to reduce the downtime of the system? Our work focused on studying the feasibility of this mechanism exploiting the cache space efficiently
 
 What we did:
 - We modified Bao code to support a page permission restoration mechanism in memory.
