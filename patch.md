@@ -1,7 +1,7 @@
 <!--# Cache-based checkpointing mechanism for High-Availability in Safety Critical Systems -->
 # Our Patch
 <!--Our paper regarding this topic is in this repo, you can find it [here](https://github.com/AntonioSposito/bao-progetto/blob/main/A2T%20paper.pdf).-->
-[...]
+
 <!-- What if we wanted to introduce in modern hypervisors a fast cache-based checkpointing mechanism with a low latency and overhead in order to reduce the downtime of the system? Our work focused on studying the feasibility of this mechanism exploiting the cache space efficiently -->
 
 What we did:
@@ -106,7 +106,7 @@ uint64_t end_handler=MRS(PMCCNTR_EL0);
 
 The handler is quite simple. In input it receives a 32-bit integer **ISS** (Instruction Specific Syndrome), a 64-bit integer **FAR** which holds the faulting address and a 64-bit integer **IL** which holds the Instruction Length for the current exception. First we calculate the physical address (paddr) of the page starting from the FAR using a base and an offset; then we get the pointer to the page table entry we are trying to modify using the function `pt_get_pte`, as input values we use the address of the page table, the level of the multi-level translation and the faulting address. After getting a pointer to the PTE, we can give all the access permissions to the page with the function `pte_set` that makes an OR between the physical address, the page type and the flags. 
 
-After using the `pte_set` function, we could add an LDR operation to bring the page into the cache and speed up future memory reads and to better control the cached data (achieving in this way a chache based checkpointing system). We want to do this because the page will have all the necessary permissions, which means it can be read directly from the cache instead of having to go to memory first. This will make the process faster and more efficient. However, when we tried to test this read operation, we were unsuccessful and didn't have enough time to investigate the problem. We think that caching the page in our handler managed by the hypervisor caused some memory misalignment, and during execution, the CPU encountered an error and stopped.
+After using the `pte_set` function, we could add an LDR operation to bring the page into the cache and speed up future memory reads and to better control the cached data <!--(achieving in this way a chache based checkpointing system)-->. We want to do this because the page will have all the necessary permissions, which means it can be read directly from the cache instead of having to go to memory first. This will make the process faster and more efficient. However, when we tried to test this read operation, we were unsuccessful and didn't have enough time to investigate the problem. We think that caching the page in our handler managed by the hypervisor caused some memory misalignment, and during execution, the CPU encountered an error and stopped.
 
 In order to execute our handler, we need to modify the function `aborts_sync_handler` also located in `srcs\bao\src\arch\armv8\aborts.c`, when the ISS corresponding to our fault is encoutered, the permission handler we wrote is executed:
 
