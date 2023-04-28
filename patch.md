@@ -6,7 +6,7 @@
 
 What we did:
 - We modified Bao code to support a page permission restoration mechanism in memory.
-- To optimize the access to the same page in the future, we have also explored the feasibility of pre-fetching the page within the restoration mechanism.
+<!-- - To optimize the access to the same page in the future, we have also explored the feasibility of pre-fetching the page within the restoration mechanism. -->
 
 <!--
 ## Objectives
